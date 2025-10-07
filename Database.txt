@@ -1,0 +1,7 @@
+DataUMKM
+- id
+- namaPemilik
+- namaUsaha
+- whatsApp
+- instagram
+- alamat
