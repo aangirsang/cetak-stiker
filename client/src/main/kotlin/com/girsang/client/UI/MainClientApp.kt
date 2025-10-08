@@ -11,40 +11,39 @@ import javafx.util.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
 
-class MainClientApp : Application(){
+class MainClientApp : Application() {
     override fun start(stage: Stage) {
-        val loader = FXMLLoader(javaClass.getResource("/FXML/main-client-app.fxml"))
-        val root = loader.load<javafx.scene.layout.AnchorPane>()
+        val loader = FXMLLoader(javaClass.getResource("/fxml/main-client-app.fxml"))
+        val root = loader.load<javafx.scene.layout.BorderPane>()
         val controller = loader.getController<MainClientAppController>()
 
-
-
+        // Label waktu
         val timeLabel = controller.lblWaktu
         val formatJam = DateTimeFormatter.ofPattern("HH:mm:ss")
         val formatTanggal = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-
-        // Timeline untuk update setiap 1 detik
         val tanggal = LocalDate.now().format(formatTanggal)
+
+        // Update jam real-time
         val timeline = Timeline(
-            KeyFrame(Duration.seconds(1.0), {
-                val jam = LocalTime.now().format(formatJam)
-                timeLabel.text = "$tanggal   $jam"
-            })
+            KeyFrame(
+                Duration.seconds(1.0),
+                EventHandler<ActionEvent> {
+                    val jam = LocalTime.now().format(formatJam)
+                    timeLabel.text = "$tanggal   $jam"
+                }
+            )
         )
         timeline.cycleCount = Timeline.INDEFINITE
         timeline.play()
 
-
+        // Tampilkan stage utama
         stage.title = "Aplikasi Client Data Cetak Stiker"
         stage.scene = Scene(root)
         stage.isMaximized = true
         stage.show()
-
-        javafx.application.Platform.runLater {
-            Thread.sleep(2000)
-            controller.lblWaktu.text = ""
-        }
     }
 }
 
